@@ -1,0 +1,57 @@
+<div class="mt-4 row comments-margin">
+  <img class="rounded-circle photo-size-comment" alt="avatar1" src="assets/images/my_photo.jpeg" />
+  <div class="d-flex flex-column comment-input">
+    <textarea *ngIf="commentEdit" class="form-control" (keyup)="checkCommentSpace()"
+      [(ngModel)]="comment">{{comment}}</textarea>
+
+    <div *ngIf="!commentEdit" class="card box-color">
+      <div class="text-margin bold">
+        {{name}}
+      </div>
+      <div class="text-margin mb-2" id="comment-content">
+        {{comment}}<span *ngIf="edited" style="color:rgb(158, 158, 158)"> (Edited)</span>
+      </div>
+
+    </div>
+    <div *ngIf="!commentEdit" class="d-flex mb-2">
+      <div class="mt-2 triangle"
+        [ngStyle]="darkBackgroundHover || darkBackgroundClick ? {'background-color': 'rgb(97, 94, 94)'} : {'background-color': 'rgb(211, 199, 199)'}"
+        (click)="toggleUpvoteBackground()" (mouseover)='hoverIn()' (mouseout)='hoverOut()' style="margin-left:10px">
+      </div>
+      <div class="mt-1 ms-2">{{numberOfUpcount}}</div>
+
+      <div *ngIf="!showReplyBox" class="hover-button ms-3 mt-1" (click)="addReply()"> Reply </div>
+      <div *ngIf="!showReplyBox" class="hover-button ms-3 mt-1" (click)="deleteComment()"> Delete </div>
+      <div *ngIf="!showReplyBox" class="hover-button ms-3 mt-1" (click)="enableEdit()"> Edit </div>
+
+
+    </div>
+    <div *ngIf="commentEdit" class="d-flex mt-1">
+      <button type="button" [disabled]='disableEditButtons' class="btn btn-primary btn-sm post-padding ms-1 mt-1"
+        (click)="saveComment()">Save</button>
+      <button type="button" [disabled]='disableEditButtons' class="btn btn-primary btn-sm post-padding ms-3 mt-1"
+        (click)="cancelEdit()">Cancel</button>
+    </div>
+    <div *ngIf="showReplyBox">
+      <div class="mt-3 mb-2 row">
+        <img class="rounded-circle photo-size-comment mr-2" alt="avatar1" src="assets/images/my_photo.jpeg" />
+        <div class="d-flex flex-column reply-input">
+
+          <textarea placeholder="Add a reply..." class="form-control" (keyup)="checkReplySpace()" [(ngModel)]="reply">{{reply}}</textarea>
+
+        </div>
+
+      </div>
+      <div class="d-flex mt-1 reply-box-margin">
+        <button type="button" [disabled]='disableReplyEditButton' class="btn btn-primary btn-sm post-padding ms-1 mt-1"
+          (click)="saveReply()">Save</button>
+        <button type="button" class="btn btn-primary btn-sm post-padding ms-3 mt-1"
+          (click)="cancelReplyEdit()">Cancel</button>
+      </div>
+
+    </div>
+    <div *ngFor="let item of allReplies">
+      <app-reply (initiateNewReply)="createReplyFromChild()" (emitUniqueIdToDelete)="deleteReply($event)" [reply]="item[0]" [replyUniqueId]="item[1]"></app-reply>
+    </div>
+  </div>
+</div>
