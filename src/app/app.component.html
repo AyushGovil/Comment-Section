@@ -1,14 +1,33 @@
-<div class="ms-4"> <div>
+<h3 class="ms-4 mt-2 mb-2">Choose user you want to comment with:</h3>
+<div class="form-check ms-4">
+  <input class="form-check-input" (click)="chooseUser($event)" type="radio" name="flexRadioDefault" value="Ayush Govil" checked>
+  <label class="form-check-label">
+    Ayush Govil
+  </label>
 </div>
-<div class="mb-3 mt-3 row">
-  <img class="rounded-circle photo-size" alt="avatar1" src="assets/images/my_photo.jpeg" />
-  <div class="d-flex flex-column comment-input">
-    <input (keyup)="checkCommentSpace()" [(ngModel)]= "comment" placeholder="Add a comment..." class="form-control" id="comment">
-    <div class="mt-2">
-    <button type="button" [disabled]='disablePost' class="btn btn-primary btn-sm post-padding" (click)="addComment()">Post</button>
+<div class="form-check ms-4 mt-2">
+  <input class="form-check-input" (click)="chooseUser($event)" type="radio" name="flexRadioDefault" value="Sushant Singh">
+  <label class="form-check-label">
+    Sushant Singh
+  </label>
+</div>
+<div class="ms-4">
+  <div>
   </div>
-  </div>
-    <div *ngFor="let item of allComments">
-      <app-comment (emitUniqueId)="deleteComment($event)" [commentItem]='item'></app-comment>
+  <div style="width:90%">
+    <div class="mb-3 mt-3 d-flex">
+      <img class="rounded-circle photo-size" alt="avatar1" src={{imgSrc}} />
+      <div class="d-flex flex-column comment-input">
+        <input (keyup)="checkCommentSpace()" [(ngModel)]="comment" ngx-trim="false" placeholder="Add a comment..."
+          class="form-control" id="comment">
+        <div class="mt-2">
+          <button type="button" [disabled]='disablePost' class="btn btn-primary btn-sm post-padding"
+            (click)="addComment()">Post</button>
+        </div>
+      </div>
+
     </div>
-</div>
+    <div *ngFor="let item of allComments">
+      <app-comment (emitUniqueId)="deleteComment($event)" [comment]="item[0]" [uniqueId]="item[1]" [name]="item[2]" [imgSrc]="item[3]"></app-comment>
+    </div>
+  </div>

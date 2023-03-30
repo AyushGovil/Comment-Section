@@ -1,14 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background-color: #f9fdfe; }
 
  
 
 .photo-size
 {
-  height:40px; 
-  width: 65px;
+  height:38px; 
+  width: 38px;
   margin-right: -10px;
 }
 
@@ -19,15 +19,18 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .comment-input
 {
-  width: 70%;
+  margin-left: 20px;
+  width: 90%;
 }
-.reply-input
+
+.upvote-num
 {
-  width: 84%;
+  margin-top: 4px;
+  margin-left: 10px;
 }
 .comments-margin
 {
-  margin-left: 1vw;
+  margin-left: 2vw;
 }
 
 
@@ -39,17 +42,15 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .photo-size-comment{
   height:35px; 
-  width: 60px;
-  margin-right: -10px;
+  width: 35px;
 }
 
 .triangle {
 	position: relative;
-	background-color: rgb(211, 199, 199);
+	background-color: rgb(231, 219, 219);
 	text-align: left;
 }
 .triangle:hover {
-	 
 	background-color: rgb(97, 94, 94);
 	cursor: pointer;
 }
@@ -93,10 +94,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   margin-left:47px;
 }
 
-@media screen and (max-width: 486px)
+.reply-input
 {
-  .reply-input
-  {
-    width: 78%;
-  }
+  margin-left: 10px;
+  width: 100%;
 }

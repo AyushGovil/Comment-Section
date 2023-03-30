@@ -1,19 +1,21 @@
 import { Component,Input,Output,EventEmitter } from '@angular/core';
-
+import { UserService } from 'src/app/service/user.service';
 @Component({
   selector: 'app-comment',
   templateUrl: './comment.component.html',
   styleUrls: ['./comment.component.css']
 })
 export class CommentComponent {
-  name : string = "Ayush Govil";
+  @Input() name : string | number= "";
+  @Input() imgSrc : string | number = "";
+  @Input() comment : string | number = ''
+  @Input() uniqueId : string | number = 0;
+  currentName : string = '';
+  currentImgSrc : string = '';
   numberOfUpcount : number = 0;
   darkBackgroundHover : boolean = false;
   darkBackgroundClick : boolean = false;
   edited : boolean = false;
-  @Input() commentItem : Array<string | number> = []
-  comment : string = ''
-  uniqueId : number = 0;
   commentEdit : boolean = false;
   previousComment : string = "";
   disableEditButtons : boolean = false;
@@ -23,15 +25,30 @@ export class CommentComponent {
   reply : string = '';
   replyEdited : boolean = false;
   disableReplyEditButton : boolean = true;
+  usersWhoUpvoted = new Set();
   previousReply : string = '';
   @Output() emitUniqueId = new EventEmitter<number>();
 
-  ngOnChanges()
+  ngOnInit()
   {
-    this.comment = <string>this.commentItem[0];
-    this.uniqueId = <number>this.commentItem[1];
+    this.userService.userSubject$.subscribe((data)=> 
+    {
+      this.currentName = data.name
+      this.currentImgSrc = data.imgSrc
+      if (this.usersWhoUpvoted.has(this.currentName))
+      {
+        this.darkBackgroundClick = true;
+      }
+      else 
+      {
+        this.darkBackgroundClick = false;
+      }
+    })
   }
+  constructor(private userService : UserService)
+  {
 
+  }
   toggleUpvoteBackground()
   {
     this.darkBackgroundClick = !this.darkBackgroundClick;
@@ -39,10 +56,12 @@ export class CommentComponent {
     if(this.darkBackgroundClick)
     {
       this.numberOfUpcount = this.numberOfUpcount+1;
+      this.usersWhoUpvoted.add(this.currentName)
     }
     else
     {
       this.numberOfUpcount = this.numberOfUpcount-1;
+      this.usersWhoUpvoted.delete(this.currentName)
     }
   }
 
@@ -57,12 +76,12 @@ export class CommentComponent {
   }
   deleteComment()
   {
-    this.emitUniqueId.emit(this.uniqueId);
+    this.emitUniqueId.emit(<number>this.uniqueId);
   }
   enableEdit()
   {
     this.commentEdit = true;
-    this.previousComment = this.comment;
+    this.previousComment =  <string>this.comment;
   }
   saveComment()
   {
@@ -77,7 +96,7 @@ export class CommentComponent {
   }
   checkCommentSpace()
   {
-    let comment = this.comment;
+    let comment = <string>this.comment;
     if (comment.trim().length === 0)
     {
       this.disableEditButtons = true;
@@ -99,14 +118,13 @@ export class CommentComponent {
   addReply(namePointer = '')
   {
     this.showReplyBox = true;
-    
     this.reply = '' + namePointer;
     this.disableReplyEditButton = true;
   }
   saveReply()
   {
     this.replyUniqueId = this.replyUniqueId + 1;
-    this.allReplies.push([this.reply, this.replyUniqueId])
+    this.allReplies.push([this.reply, this.replyUniqueId, this.currentName, this.currentImgSrc])
     this.showReplyBox = false;
     
   }
@@ -126,9 +144,9 @@ export class CommentComponent {
     }
   }
 
-  createReplyFromChild()
+  createReplyFromChild(nameToReply :any)
   {
-    let namePointer = '@' + this.name + ' ';
+    let namePointer = '@' + nameToReply + ' ';
     this.addReply(namePointer)
   }
 }

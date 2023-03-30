@@ -1,5 +1,5 @@
 import { Component,Input,Output,EventEmitter } from '@angular/core';
-
+import { UserService } from 'src/app/service/user.service';
 @Component({
   selector: 'app-reply',
   templateUrl: './reply.component.html',
@@ -8,16 +8,42 @@ import { Component,Input,Output,EventEmitter } from '@angular/core';
 export class ReplyComponent {
   @Input() reply : string | number = "";
   @Input() replyUniqueId : string | number = 0;
+  @Input() name : string | number = "";
+  @Input() imgSrc : string | number = "";
+  currentName : string = '';
+  currentImgSrc : string = '';
   edited : boolean = false;
   replyEdit : boolean = false;
-  name : string = "Ayush Govil"
   darkBackgroundClick : boolean = false;
   darkBackgroundHover : boolean = false;
   numberOfUpcount : number = 0;
   disableEditButtons : boolean = false;
   previousReply : string = '';
+  usersWhoUpvoted = new Set();
   @Output() emitUniqueIdToDelete = new EventEmitter<number>();
-  @Output() initiateNewReply = new EventEmitter<boolean>();
+  @Output() initiateNewReply = new EventEmitter<string | number>();
+
+  ngOnInit()
+  {
+    this.userService.userSubject$.subscribe((data)=> 
+    {
+      this.currentName = data.name
+      this.currentImgSrc = data.imgSrc
+      if (this.usersWhoUpvoted.has(this.currentName))
+      {
+        this.darkBackgroundClick = true;
+      }
+      else 
+      {
+        this.darkBackgroundClick = false;
+      }
+    })
+  }
+
+  constructor(private userService : UserService)
+  {
+
+  }
 
   toggleUpvoteBackground()
   {
@@ -26,10 +52,12 @@ export class ReplyComponent {
     if(this.darkBackgroundClick)
     {
       this.numberOfUpcount = this.numberOfUpcount+1;
+      this.usersWhoUpvoted.add(this.currentName)
     }
     else
     {
       this.numberOfUpcount = this.numberOfUpcount-1;
+      this.usersWhoUpvoted.delete(this.currentName)
     }
   }
   hoverIn()
@@ -50,7 +78,8 @@ export class ReplyComponent {
 
   addReply()
   {
-    this.initiateNewReply.emit(true);
+    console.log(this.name)
+    this.initiateNewReply.emit(this.name);
   }
   checkReplySpace()
   {

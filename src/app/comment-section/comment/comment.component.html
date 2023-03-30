@@ -1,6 +1,6 @@
-<div class="mt-4 row comments-margin">
-  <img class="rounded-circle photo-size-comment" alt="avatar1" src="assets/images/my_photo.jpeg" />
-  <div class="d-flex flex-column comment-input">
+<div class="mt-4 d-flex comments-margin">
+  <img class="rounded-circle photo-size-comment" alt="avatar1" src={{imgSrc}} />
+  <div class="d-flex flex-column comment-input" style="margin-left:10px">
     <textarea *ngIf="commentEdit" class="form-control" (keyup)="checkCommentSpace()"
       [(ngModel)]="comment">{{comment}}</textarea>
 
@@ -13,28 +13,27 @@
       </div>
 
     </div>
-    <div *ngIf="!commentEdit" class="d-flex mb-2">
-      <div class="mt-2 triangle"
-        [ngStyle]="darkBackgroundHover || darkBackgroundClick ? {'background-color': 'rgb(97, 94, 94)'} : {'background-color': 'rgb(211, 199, 199)'}"
-        (click)="toggleUpvoteBackground()" (mouseover)='hoverIn()' (mouseout)='hoverOut()' style="margin-left:10px">
+    <div *ngIf="!commentEdit"  class="d-flex upvote-hover mb-2">
+      <div class="mt-2 triangle" (mouseover)='hoverIn()' (mouseout)='hoverOut()' (click)="toggleUpvoteBackground()"
+        [ngStyle]="darkBackgroundHover || darkBackgroundClick ? {'background-color': 'rgb(97, 94, 94)'} : {'background-color': 'rgb(231, 219, 219)'}" style="margin-left:10px">
       </div>
-      <div class="mt-1 ms-2">{{numberOfUpcount}}</div>
+      <div class="upvote-num">{{numberOfUpcount}}</div>
 
       <div *ngIf="!showReplyBox" class="hover-button ms-3 mt-1" (click)="addReply()"> Reply </div>
-      <div *ngIf="!showReplyBox" class="hover-button ms-3 mt-1" (click)="deleteComment()"> Delete </div>
-      <div *ngIf="!showReplyBox" class="hover-button ms-3 mt-1" (click)="enableEdit()"> Edit </div>
+      <div *ngIf="!showReplyBox && name==currentName" class="hover-button ms-3 mt-1" (click)="deleteComment()"> Delete </div>
+      <div *ngIf="!showReplyBox && name==currentName" class="hover-button ms-3 mt-1" (click)="enableEdit()"> Edit </div>
 
 
     </div>
     <div *ngIf="commentEdit" class="d-flex mt-1">
       <button type="button" [disabled]='disableEditButtons' class="btn btn-primary btn-sm post-padding ms-1 mt-1"
         (click)="saveComment()">Save</button>
-      <button type="button" [disabled]='disableEditButtons' class="btn btn-primary btn-sm post-padding ms-3 mt-1"
+      <button type="button" [disabled]='disableEditButtons' class="btn btn-primary btn-sm post-padding ms-2 mt-1"
         (click)="cancelEdit()">Cancel</button>
     </div>
     <div *ngIf="showReplyBox">
-      <div class="mt-3 mb-2 row">
-        <img class="rounded-circle photo-size-comment mr-2" alt="avatar1" src="assets/images/my_photo.jpeg" />
+      <div class="mt-3 mb-2 d-flex">
+        <img class="rounded-circle photo-size-comment" alt="avatar1" src={{currentImgSrc}} />
         <div class="d-flex flex-column reply-input">
 
           <textarea placeholder="Add a reply..." class="form-control" (keyup)="checkReplySpace()" [(ngModel)]="reply">{{reply}}</textarea>
@@ -45,13 +44,14 @@
       <div class="d-flex mt-1 reply-box-margin">
         <button type="button" [disabled]='disableReplyEditButton' class="btn btn-primary btn-sm post-padding ms-1 mt-1"
           (click)="saveReply()">Save</button>
-        <button type="button" class="btn btn-primary btn-sm post-padding ms-3 mt-1"
+        <button type="button" class="btn btn-primary btn-sm post-padding ms-2 mt-1"
           (click)="cancelReplyEdit()">Cancel</button>
       </div>
 
     </div>
     <div *ngFor="let item of allReplies">
-      <app-reply (initiateNewReply)="createReplyFromChild()" (emitUniqueIdToDelete)="deleteReply($event)" [reply]="item[0]" [replyUniqueId]="item[1]"></app-reply>
+      <app-reply (initiateNewReply)="createReplyFromChild($event)" (emitUniqueIdToDelete)="deleteReply($event)" [reply]="item[0]" [replyUniqueId]="item[1]" [name]="item[2]" [imgSrc]="item[3]"></app-reply>
     </div>
   </div>
 </div>
+
